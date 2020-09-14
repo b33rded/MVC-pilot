@@ -3,5 +3,5 @@
 
 <?php //$this->end() ?>
 <?php $this->start('body'); ?>
-    <h1 class="text-center blue">AaAaAaAaAaAaA-B!</h1>
+    <h1 class="text-center blue">AaAaAaAaAaAaA-B-C!</h1>
 <?php $this->end(); ?>

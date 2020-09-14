@@ -1,6 +1,7 @@
 <?php
 namespace Core;
 use Core\Application;
+use Core\View;
 
 class Controller extends Application {
     protected $controller;

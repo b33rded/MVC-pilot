@@ -150,6 +150,13 @@ class DB {
         return false;
     }
 
+    public function findFirst($table, $params=[], $class=false) {
+        if($this->read($table, $params, $class)) {
+            return $this->first();
+        }
+        return false;
+    }
+
     public function get_columns($table) {
         return $this->query("SHOW COLUMNS FROM {$table}")->get();
     }
