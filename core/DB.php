@@ -1,7 +1,6 @@
 <?php
 namespace Core;
 use \PDO;
-use Core\DatabaseConnection;
 
 class DB {
     private static $instance = null;
@@ -41,7 +40,7 @@ class DB {
                 if($class){
                     $this->result = $this->query->fetchAll(PDO::FETCH_CLASS,$class);
                 } else {
-                    $this->result = $this->query->fetchALL(PDO::FETCH_OBJ);
+                    $this->result = $this->query->fetchALL(PDO::FETCH_ASSOC);
                 }
                 $this->count = $this->query->rowCount();
                 $this->lastInsertID = $this->pdo->lastInsertId();
@@ -99,49 +98,6 @@ class DB {
         return false;
     }
 
-    protected function read($table, $params=[], $class) {
-        $conditionString = '';
-        $bind = [];
-        $order = '';
-        $limit = '';
-
-        // conditions
-        if(isset($params['conditions'])) {
-            if(is_array($params['conditions'])) {
-                foreach($params['conditions'] as $condition) {
-                    $conditionString .= ' ' . $condition . ' AND';
-                }
-                $conditionString = trim($conditionString);
-                $conditionString = rtrim($conditionString, ' AND');
-            } else {
-                $conditionString = $params['conditions'];
-            }
-            if($conditionString != '') {
-                $conditionString = ' Where ' . $conditionString;
-            }
-        }
-
-        // bind
-        if(array_key_exists('bind', $params)) {
-            $bind = $params['bind'];
-        }
-
-        // order
-        if(array_key_exists('order', $params)) {
-            $order = ' ORDER BY ' . $params['order'];
-        }
-
-        // limit
-        if(array_key_exists('limit', $params)) {
-            $limit = ' LIMIT ' . $params['limit'];
-        }
-        $sql = "SELECT * FROM {$table}{$conditionString}{$order}{$limit}";
-        if($this->query($sql, $bind,$class)) {
-            if(!count($this->result)) return false;
-            return true;
-        }
-        return false;
-    }
 
     public function find($table, $params=[],$class=false) {
         if($this->read($table, $params, $class)) {
@@ -152,12 +108,20 @@ class DB {
 
     public function findFirst($table, $params=[], $class=false) {
         if($this->read($table, $params, $class)) {
-            return $this->first();
+            return $this->get();
         }
         return false;
     }
 
     public function get_columns($table) {
         return $this->query("SHOW COLUMNS FROM {$table}")->get();
+    }
+
+    public function count() {
+        return $this->count;
+    }
+
+    public function error() {
+        return $this->error;
     }
 }

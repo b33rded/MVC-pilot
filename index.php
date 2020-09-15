@@ -4,11 +4,12 @@ use Core\Router;
 define('DS', DIRECTORY_SEPARATOR);
 define('ROOT', dirname(__FILE__));
 
-require_once (ROOT . DS . 'config' . DS . 'config.php');
-require_once (ROOT . DS . 'app' . DS . 'lib' . DS . 'helpers.php');
 require_once (ROOT . DS . 'vendor' . DS . 'autoload.php');
 $dotenv = Dotenv\Dotenv::createUnsafeImmutable(__DIR__);
 $dotenv->load();
+
+require_once (ROOT . DS . 'config' . DS . 'config.php');
+require_once (ROOT . DS . 'app' . DS . 'lib' . DS . 'helpers.php');
 
 function autoload($className){
     $classAry = explode('\\', $className);
@@ -23,8 +24,7 @@ function autoload($className){
 spl_autoload_register('autoload');
 session_start();
 
-$url = isset($_SERVER['PATH_INFO']) ? explode('/', ltrim($_SERVER['PATH_INFO'], '/')) : [];
+$url = isset($_SERVER['REQUEST_URI']) ? explode('/', ltrim($_SERVER['REQUEST_URI'], '/')) : [];
 
-// Route the request
 Router::route($url);
 

@@ -1,5 +1,6 @@
 <?php
 namespace Core;
+use Core\Controller;
 
 class Router {
     public static function route ($url) {
@@ -13,15 +14,15 @@ class Router {
         array_shift($url);
 
         // action
-        $action = (isset($url[0]) && $url[0] != '') ? $url[0] . 'Action' : 'indexAction';
-        $action_name = $controller;
+        $action = (isset($url[0]) && $url[0] != '') ? $url[0] . 'Action': 'indexAction';
+        $action_name = (isset($url[0]) && $url[0] != '')? $url[0] : 'index';
         array_shift($url);
 
         // params
         $queryParams = $url;
         $controller = 'App\Controllers\\' . $controller;
 
-        $dispatch = new $controller($controller_name, $action);
+        $dispatch = new $controller($controller, $action);
 
         if(method_exists($controller, $action)) {
             call_user_func_array([$dispatch, $action], $queryParams);

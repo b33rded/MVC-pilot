@@ -3,3 +3,4 @@ sandbox.php
 composer.*
 *.env
 /vendor
+/static/pics

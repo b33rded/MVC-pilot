@@ -1,6 +1,5 @@
 <?php
 namespace Core;
-use Core\DB;
 
 class Model {
     protected $db;
@@ -29,6 +28,15 @@ class Model {
             $results[] = $obj;
         }
         return $results;
+    }
+
+    public function findFirst($params =[]) {
+        $resultQuery = $this->db->findFirst($this->table, $params);
+        $result = new self($this->table);
+        if($resultQuery) {
+            $result->populateObjData($result);
+        }
+        return $result;
     }
 
 
@@ -65,14 +73,6 @@ class Model {
 
     public function query($sql, $bind = []) {
         return $this->db->query($sql, $bind);
-    }
-
-    public function data() {
-        $data = new stdClass();
-        foreach($this->columnNames as $column) {
-            $data->column = $this->column;
-        }
-        return $data;
     }
 
     public function assign($params) {
