@@ -3,11 +3,10 @@ namespace App\Controllers;
 use App\Models\Users;
 use Core\Controller;
 use Core\Validation;
-use Core\Input;
 use Core\Router;
 use Core\Mail;
 
-class Login extends Controller {
+class RegisterController extends Controller {
     private $errors = [];
 
     public function __construct($controller, $action) {
@@ -16,27 +15,7 @@ class Login extends Controller {
         $this->view->setLayout('default');
     }
 
-    public function signinAction() {
-        if ($_POST) {
-            $data = $_POST;
-            foreach ($data as $key=>$value) {
-                $data[$key] = sanitize($value);
-            }
-            $valid = new Validation('users');
-            if ($valid->checkLogin($data)) {
-                $user = new Users();
-                $remember = isset($data['remember']) && Input::get('remember');
-                $user->login($remember);
-                Router::redirect('');
-            } else {
-                $this->errors = $valid->errors();
-                $this->view->displayErrors = $valid->displayErrors($this->errors);
-            }
-        }
-        $this->view->render('login/signin');
-    }
-
-    public function signupAction() {
+    public function index() {
         if ($_POST) {
             $data = $_POST;
             foreach ($data as $key=>$value) {
@@ -51,23 +30,19 @@ class Login extends Controller {
                     if($mail->confirmation($data['email'], $code)) {
                         $newUser = new Users();
                         $newUser->register($data);
-                        Router::redirect('login/signin');
+                        Router::redirect('login');
                     }
                 }
 
             } else {
-            $this->errors = $valid->errors();
-            $this->view->displayErrors = $valid->displayErrors($this->errors);
+                $this->errors = $valid->errors();
+                $this->view->displayErrors = $valid->displayErrors($this->errors);
             }
         }
-        $this->view->render('login/signup');
+        $this->view->render('login/register');
     }
 
-    public function indexAction() {
-        $this->view->render('home/index');
-    }
-
-    public function verifyAction() {
+    public function verify() {
         if(!empty($_GET['email']) && !empty($_GET['code'])) {
             $data = $_GET;
             foreach ($data as $key=>$value) {
@@ -78,7 +53,7 @@ class Login extends Controller {
                 $user->login();
                 Router::redirect('');
             } else {
-                Router::redirect('login/signup');
+                Router::redirect('register');
             }
 
         }

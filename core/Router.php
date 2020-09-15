@@ -9,12 +9,12 @@ class Router {
         array_shift($url);
 
         // controller
-        $controller = (isset($url[0]) && $url[0] != '') ? ucwords($url[0]) : DEFAULT_CONTROLLER;
+        $controller = (isset($url[0]) && $url[0] != '') ? ucwords($url[0]) . 'Controller': DEFAULT_CONTROLLER. 'Controller';
         $controller_name = $controller;
         array_shift($url);
 
         // action
-        $action = (isset($url[0]) && $url[0] != '') ? $url[0] . 'Action': 'indexAction';
+        $action = (isset($url[0]) && $url[0] != '') ? $url[0]: 'index';
         $action_name = (isset($url[0]) && $url[0] != '')? $url[0] : 'index';
         array_shift($url);
 
@@ -27,7 +27,7 @@ class Router {
         if(method_exists($controller, $action)) {
             call_user_func_array([$dispatch, $action], $queryParams);
         } else {
-            die('Method does not exist in the controller "'.$controller_name.'"');
+            die("Method {$action} does not exist in the {$controller_name}");
         }
     }
 

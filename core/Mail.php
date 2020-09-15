@@ -27,7 +27,7 @@ class Mail {
 
             $this->mail->isHTML(true);
             $this->mail->Subject = 'Registration confirmation';
-            $this->mail->Body    = 'Hello new user!</br> To complete your registration please click on a link below:</br> http://yourwebsite.com/login/verify/?email='.$address.'&code='.$code;
+            $this->mail->Body    = 'Hello new user!</br> To complete your registration please click on a link below:</br> http://yourwebsite.com/register/verify/?email='.$address.'&code='.$code;
             $this->mail->AltBody = 'Hello new user! To complete your registration please click on a link below:';
 
             $this->mail->send();

@@ -4,7 +4,7 @@
 <?php $this->start('body'); ?>
     <div class="login-form">
         <h2 class="text-center">Sign Up</h2>
-        <form action="<?=GROOT?>login/signup" method="POST">
+        <form action="<?=GROOT?>register" method="POST">
             <div class="form-group">
                 <label for="email" class="bmd-label-floating">Email</label>
                 <input type="email" class="form-control" name="email" id="email">
@@ -24,6 +24,6 @@
                 <button type="submit" class="btn btn-primary">Register</button>
             </div>
         </form>
-        <p class="text-center small font-weight-bold">Already a member? <a href="<?=GROOT?>login/signin" class="text-decoration-none text-light">Sign in here!</a>.</p>
+        <p class="text-center small font-weight-bold">Already a member? <a href="<?=GROOT?>login" class="text-decoration-none text-light">Sign in here!</a>.</p>
     </div>
 <?php $this->end(); ?>
