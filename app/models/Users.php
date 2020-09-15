@@ -17,7 +17,7 @@ class Users extends Model {
         $this->sessionName = CURRENT_USER_SESSION_NAME;
         $this->cookieName = REMEMBER_ME_COOKIE_NAME;
         $this->softDelete = true;
-        if($user != '') {
+         if($user != '') {
             if(is_int($user)) {
                 $u = $this->db->query("SELECT * FROM users WHERE id = ?", [$user])->get();
             } else {
@@ -40,6 +40,11 @@ class Users extends Model {
     }
 
     public function login($rememberMe = false) {
+        $data = $this->db->get();
+        $data = $data[0];
+        $this->id = $data['id'];
+        $this->email = $data['email'];
+        $this->password = $data['password'];
         Session::set($this->sessionName, $this->id);
         if($rememberMe) {
             $hash = md5(uniqid() + rand(0, 100));

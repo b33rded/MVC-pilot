@@ -39,7 +39,6 @@ class Model {
         return $result;
     }
 
-
     public function save($params) {
         $fields = $params;
         //update or insert?

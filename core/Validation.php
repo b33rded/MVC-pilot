@@ -21,6 +21,7 @@ class Validation {
                  $this->errors['email'] = 'Must be an email address';
              }
         }
+
         if (empty($post['password'])) {
             $this->errors['password'] = 'Password is required';
         } else {
@@ -31,6 +32,7 @@ class Validation {
                 $this->errors['password'] = 'Password must contain letters and numbers only';
             }
         }
+
         if ($post['password'] != $post['confirm']) {
             $this->errors['password'] = 'Please make sure your passwords match';
         } else {
@@ -41,10 +43,12 @@ class Validation {
                 $this->errors['password'] = 'Password must contain letters and numbers only';
             }
         }
+
         $user_get = $this->db->query("SELECT * FROM {$this->table} WHERE email=?", [$email]);
         if ($user_get->count()) {
             $this->errors['email'] = "Email already registered";
         }
+
         if (empty($this->errors)) {
             $this->passed = true;
         }
@@ -59,13 +63,14 @@ class Validation {
         } elseif (empty($post['password'])) {
             $this->errors['password'] = 'Password is required';
         }
+
         $user = $this->db->query("SELECT * FROM {$this->table} WHERE email=?", [$email])->get();
         $user = $user[0];
         if ($user && password_verify(Input::get('password'), $user['password'])) {
             $this->passed = true;
             return $this->passed;
         } else {
-            $this->errors['email'] = 'Wrong email or password';
+            $this->errors['login'] = 'Wrong email or password';
         }
     }
 
