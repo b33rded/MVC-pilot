@@ -19,9 +19,9 @@ class Users extends Model {
         $this->softDelete = true;
          if($user != '') {
             if(is_int($user)) {
-                $u = $this->db->query("SELECT * FROM users WHERE id = ?", [$user])->get();
+                $u = $this->db->query("SELECT * FROM {$table} WHERE id = ?", [$user])->get();
             } else {
-                $u = $this->db->query("SELECT * FROM users WHERE email = ?", [$user])->get();
+                $u = $this->db->query("SELECT * FROM {$table} WHERE email = ?", [$user])->get();
             }
                 if($u) {
                     $u = $u[0];
@@ -32,7 +32,6 @@ class Users extends Model {
             }
     }
 
-
     public function register($params) {
         $this->assign($params);
         $params['password'] = password_hash($params['password'], PASSWORD_DEFAULT);
@@ -40,11 +39,11 @@ class Users extends Model {
     }
 
     public function login($rememberMe = false) {
-        $data = $this->db->get();
-        $data = $data[0];
-        $this->id = $data['id'];
-        $this->email = $data['email'];
-        $this->password = $data['password'];
+        $userData = $this->db->get();
+        $userData = $userData[0];
+        $this->id = $userData['id'];
+        $this->email = $userData['email'];
+        $this->password = $userData['password'];
         Session::set($this->sessionName, $this->id);
         if($rememberMe) {
             $hash = md5(uniqid() + rand(0, 100));
@@ -54,5 +53,17 @@ class Users extends Model {
             $this->db->query("DELETE FROM user_sessions WHERE user_id = ? AND user_agent = ?", [$this->id, $user_agent]);
             $this->db->insert('user_sessions', $fields);
         }
+    }
+
+    public function verify($email) {
+        $userData = $this->db->query("SELECT * FROM {$this->table} WHERE email=?", [$email])->get();
+        $userData = $userData[0];
+        $this->id = $userData['id'];
+        $this->email = $userData['email'];
+        if($userData['status'] === 0 && empty($userData['activated'])) {
+            $t = time();
+            if($this->db->update($this->table, $this->id, ['status'=>0, 'activated'=>date("Y-m-d H:i:s", $t)])) return true;
+        }
+        return false;
     }
 }

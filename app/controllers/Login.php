@@ -5,6 +5,7 @@ use Core\Controller;
 use Core\Validation;
 use Core\Input;
 use Core\Router;
+use Core\Mail;
 
 class Login extends Controller {
     private $errors = [];
@@ -44,8 +45,15 @@ class Login extends Controller {
             $valid = new Validation('users');
             if ($valid->checkRegister($data)) {
                 unset($data['confirm']);
-                $newUser = new Users();
-                $newUser->register($data);
+                $mail = new Mail();
+                $code = md5(time().$data['email'].rand(0,666));
+                if ($mail) {
+                    if($mail->confirmation($data['email'], $code)) {
+                        $newUser = new Users();
+                        $newUser->register($data);
+                    }
+                }
+
             } else {
             $this->errors = $valid->errors();
             $this->view->displayErrors = $valid->displayErrors($this->errors);
@@ -53,5 +61,26 @@ class Login extends Controller {
         }
 
         $this->view->render('login/signup');
+    }
+
+    public function indexAction() {
+        $this->view->render('home/index');
+    }
+
+    public function verifyAction() {
+        if(!empty($_GET['email']) && !empty($_GET['code'])) {
+            $data = $_GET;
+            foreach ($data as $key=>$value) {
+                $data[$key] = sanitize($value);
+            }
+            $user = new Users();
+            if($user->verify($data['email'])){
+                $user->login();
+                Router::redirect('');
+            } else {
+                Router::redirect('login/signup');
+            }
+
+        }
     }
 }
