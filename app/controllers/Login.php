@@ -25,7 +25,7 @@ class Login extends Controller {
             $valid = new Validation('users');
             if ($valid->checkLogin($data)) {
                 $user = new Users();
-                $remember = (isset($data['remember']) && Input::get('remember')) ? true : false;
+                $remember = isset($data['remember']) && Input::get('remember');
                 $user->login($remember);
                 Router::redirect('');
             } else {
@@ -51,6 +51,7 @@ class Login extends Controller {
                     if($mail->confirmation($data['email'], $code)) {
                         $newUser = new Users();
                         $newUser->register($data);
+                        Router::redirect('login/signin');
                     }
                 }
 
@@ -59,7 +60,6 @@ class Login extends Controller {
             $this->view->displayErrors = $valid->displayErrors($this->errors);
             }
         }
-
         $this->view->render('login/signup');
     }
 

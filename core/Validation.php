@@ -68,10 +68,13 @@ class Validation {
         $user = $user[0];
         if ($user && password_verify(Input::get('password'), $user['password'])) {
             $this->passed = true;
-            return $this->passed;
+        } elseif (empty($user['activated'])) {
+            $this->passed = false;
+            $this->errors['login'] = 'Please, confirm your email first';
         } else {
             $this->errors['login'] = 'Wrong email or password';
         }
+        return $this->passed;
     }
 
     public function errors() {
