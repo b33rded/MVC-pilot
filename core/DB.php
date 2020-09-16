@@ -68,7 +68,6 @@ class DB {
         }
         $where = rtrim($where, ' AND ');
         $sql = "SELECT * FROM {$table} WHERE {$where}";
-        dnd($sql);
         return $this->query($sql, $bind, $class);
     }
 
