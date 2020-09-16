@@ -6,6 +6,7 @@ class Validation {
     private $db;
     public $passed = false;
     public $table;
+    public $user;
 
     public function __construct($table) {
         $this->db = DB::getInstance();
@@ -43,7 +44,7 @@ class Validation {
         $email = $post['email'];
         $password = $post['password'];
         $user = $this->db->selectAll($this->table, ['email'=>$email])->getFirst();;
-
+        $this->user = $user;
         if (empty($email)) {
             $this->errors['email'] = 'An email is required';
         } elseif (empty($password)) {
@@ -63,16 +64,27 @@ class Validation {
         return $this->passed;
     }
 
+    public function checkAdmin() {
+        $this->passed = false;
+        if($this->user->role === 0) {
+            $this->errors['role'] = 'Access Denied';
+        }
+        if(empty($this->errors)) {
+            $this->passed = true;
+        }
+        return $this->passed;
+    }
+
     public function errors() {
         return $this->errors;
     }
 
     public function displayErrors($errors) {
-        $html = '';
+        $html = '<div class="alert alert-danger" role="alert">';
         foreach($errors as $field => $error) {
-            $html .= '<p class="error">'.$error.'</p>';
+            $html .= $error;
         }
-        $html .= '';
+        $html .= '</div>';
         return $html;
     }
 }

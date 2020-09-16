@@ -2,6 +2,7 @@
 namespace Core;
 
 class Session {
+
     public static function exists($name) {
         return isset($_SESSION[$name]);
     }
@@ -18,6 +19,13 @@ class Session {
         if(self::exists($name)) {
             unset($_SESSION[$name]);
         }
+    }
+
+    public static function status($role) {
+        if($role === 10) {
+            return $_SESSION['role'] = 'admin';
+        }
+        return $_SESSION['role'] = 'user';
     }
 
     public static function uagent_no_version() {

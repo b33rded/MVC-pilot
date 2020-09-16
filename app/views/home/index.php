@@ -2,5 +2,6 @@
 <?php $this->end() ?>
 
 <?php $this->start('body'); ?>
-    <h1 class="text-center blue">AaAaAaAaAaAaA-B-C!</h1>
+<body class="index-page">
+</body>
 <?php $this->end(); ?>

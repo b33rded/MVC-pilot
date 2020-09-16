@@ -8,6 +8,9 @@ class Router {
         array_shift($url);
 
         // controller
+        if(isset($url[0]) && is_dir('app' . DS . 'controllers' . DS . $url[0])) {
+            $dir = array_shift($url);
+        }
         $controller = (isset($url[0]) && $url[0] != '') ? ucwords($url[0]) . 'Controller': DEFAULT_CONTROLLER. 'Controller';
         $controller_name = (isset($url[0]) && $url[0] != '') ? ucwords($url[0]): DEFAULT_CONTROLLER;;
         array_shift($url);
@@ -19,7 +22,12 @@ class Router {
 
         // params
         $queryParams = $url;
-        $controller = 'App\Controllers\\' . $controller;
+
+        if(isset($dir)) {
+            $controller = "App\Controllers\\{$dir}\\" . $controller;
+        } else {
+            $controller = 'App\Controllers\\' . $controller;
+        }
 
         $dispatch = new $controller($controller, $action);
 

@@ -17,8 +17,7 @@ class Users extends Model
     public $role;
     public $registred_at;
 
-    public function __construct($user = '')
-    {
+    public function __construct($user = '') {
         $table = 'users';
         parent::__construct($table);
         $this->sessionName = CURRENT_USER_SESSION_NAME;
@@ -33,17 +32,16 @@ class Users extends Model
         }
     }
 
-    public function register($params)
-    {
+    public function register($params) {
         $this->assign($params);
         $params['password'] = password_hash($params['password'], PASSWORD_DEFAULT);
         $this->save($params);
     }
 
-    public function login($rememberMe = false)
-    {
+    public function login($params) {
         Session::set($this->sessionName, $this->id);
-        if ($rememberMe) {
+        Session::status($this->role);
+        if ($params['remember']) {
             $hash = md5(uniqid() + rand(0, 100));
             $user_agent = Session::uagent_no_version();
             Cookie::set($this->cookieName, $hash, REMEMBER_ME_COOKIE_EXPIRY);
@@ -62,8 +60,7 @@ class Users extends Model
         return false;
     }
 
-    public static function currentUser()
-    {
+    public static function currentUser() {
         if (!isset(self::$currentUser) && isset($_SESSION)) {
             $user = new Users((int)Session::get(CURRENT_USER_SESSION_NAME));
             self::$currentUser = $user;

@@ -1,10 +1,10 @@
 <?php
-namespace App\Controllers;
-use App\Models\Users;
+namespace App\Controllers\Admin;
 use Core\Controller;
-use Core\Validation;
-use Core\Input;
 use Core\Router;
+use Core\Validation;
+use App\Models\Users;
+use App\Models\Dashboard;
 
 class LoginController extends Controller {
     private $errors = [];
@@ -12,7 +12,7 @@ class LoginController extends Controller {
     public function __construct($controller, $action) {
         parent::__construct($controller, $action);
         $this->load_model('Users');
-        $this->view->setLayout('default');
+        $this->view->setLayout('admin');
     }
 
     public function index() {
@@ -23,15 +23,15 @@ class LoginController extends Controller {
             }
             $valid = new Validation('users');
             if ($valid->checkLogin($data)) {
-                $user = new Users($data['email']);
-                $remember = isset($data['remember']);
-                $user->login($data);
-                Router::redirect('');
-            } else {
-                $this->errors = $valid->errors();
-                $this->view->displayErrors = $valid->displayErrors($this->errors);
+                if($valid->checkAdmin()) {
+                    $user = new Users($data['email']);
+                    $user->login($data);
+                } else {
+                    $this->errors = $valid->errors();
+                    $this->view->displayErrors = $valid->displayErrors($this->errors);
+                }
             }
         }
-        $this->view->render('login/login');
+            $this->view->render('admin/login');
     }
 }

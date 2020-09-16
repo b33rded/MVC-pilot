@@ -2,18 +2,6 @@
     color: #1e90ff;
 }
 
-.login-form {
-    width: 400px !important;
-    margin: 100px auto !important;
-}
-
-.error p {
-    color: #bed6f5 !important;
-    font-size: small !important;
-    font-weight: bold !important;
-    margin-bottom: 3px;
-}
-
-.error {
-    background: #7f1811 !important;
+.form-submit {
+    margin: 20px auto !important;
 }
