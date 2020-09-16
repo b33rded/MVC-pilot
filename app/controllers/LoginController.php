@@ -24,7 +24,7 @@ class LoginController extends Controller {
             $valid = new Validation('users');
             if ($valid->checkLogin($data)) {
                 $user = new Users();
-                $remember = isset($data['remember']) && Input::get('remember');
+                $remember = isset($data['remember']);
                 $user->login($remember);
                 Router::redirect('');
             } else {

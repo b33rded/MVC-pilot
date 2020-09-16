@@ -4,66 +4,79 @@ use Core\Model;
 use Core\Cookie;
 use Core\Session;
 
-class Users extends Model {
-    private $isLoggedIn;
+class Users extends Model
+{
     private $sessionName;
     private $cookieName;
-    public static $currentLoggedInUser = null;
-    public $id,$email,$password;
+    public static $currentUser = null;
+    public $id;
+    public $email;
+    public $password;
+    public $status;
+    public $activated;
+    public $role;
+    public $registred_at;
 
-    public function __construct($user='') {
+    public function __construct($user = '')
+    {
         $table = 'users';
         parent::__construct($table);
         $this->sessionName = CURRENT_USER_SESSION_NAME;
         $this->cookieName = REMEMBER_ME_COOKIE_NAME;
         $this->softDelete = true;
-         if($user != '') {
-            if(is_int($user)) {
-                $u = $this->db->query("SELECT * FROM {$table} WHERE id = ?", [$user])->get();
+        if ($user != '') {
+            if (is_int($user)) {
+                $this->userData('id', $user);
             } else {
-                $u = $this->db->query("SELECT * FROM {$table} WHERE email = ?", [$user])->get();
+                $this->userData('email', $user);
             }
-                if($u) {
-                    $u = $u[0];
-                    $this->id = $u['id'];
-                    $this->email = $u['email'];
-                    $this->password = $u['password'];
-                }
-            }
+        }
     }
 
-    public function register($params) {
+    public function register($params)
+    {
         $this->assign($params);
         $params['password'] = password_hash($params['password'], PASSWORD_DEFAULT);
         $this->save($params);
     }
 
-    public function login($rememberMe = false) {
-        $userData = $this->db->get();
-        $userData = $userData[0];
-        $this->id = $userData['id'];
-        $this->email = $userData['email'];
-        $this->password = $userData['password'];
+    public function login($rememberMe = false)
+    {
         Session::set($this->sessionName, $this->id);
-        if($rememberMe) {
+        if ($rememberMe) {
             $hash = md5(uniqid() + rand(0, 100));
             $user_agent = Session::uagent_no_version();
             Cookie::set($this->cookieName, $hash, REMEMBER_ME_COOKIE_EXPIRY);
-            $fields = ['session'=>$hash, 'user_agent'=>$user_agent, 'user_id'=>$this->id];
+            $fields = ['session' => $hash, 'user_agent' => $user_agent, 'user_id' => $this->id];
             $this->db->query("DELETE FROM user_sessions WHERE user_id = ? AND user_agent = ?", [$this->id, $user_agent]);
             $this->db->insert('user_sessions', $fields);
         }
     }
 
     public function verify($email) {
-        $userData = $this->db->query("SELECT * FROM {$this->table} WHERE email=?", [$email])->get();
-        $userData = $userData[0];
-        $this->id = $userData['id'];
-        $this->email = $userData['email'];
-        if($userData['status'] === 0 && empty($userData['activated'])) {
+        $this->userData('email', $email);
+        if ($this->status === 0 && !empty($this->activated)) {
             $t = time();
-            if($this->db->update($this->table, $this->id, ['status'=>0, 'activated'=>date("Y-m-d H:i:s", $t)])) return true;
+            if ($this->db->update($this->table, $this->id, ['status' => 1, 'activated' => date("Y-m-d H:i:s", $t)])) return true;
         }
         return false;
+    }
+
+    public static function currentUser()
+    {
+        if (!isset(self::$currentUser) && isset($_SESSION)) {
+            $user = new Users((int)Session::get(CURRENT_USER_SESSION_NAME));
+            self::$currentUser = $user;
+        }
+        return self::$currentUser;
+    }
+
+    private function userData($column, $value) {
+        $user = $this->db->selectAll($this->table, [$column=>$value], 'App\Models\Users')->getFirst();
+        if ($user) {
+            foreach ($user as $key => $val) {
+                $this->$key = $val;
+            }
+        }
     }
 }

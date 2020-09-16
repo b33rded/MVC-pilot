@@ -1,6 +1,5 @@
 <?php
 namespace Core;
-use Core\Controller;
 
 class Router {
     public static function route ($url) {
@@ -10,12 +9,12 @@ class Router {
 
         // controller
         $controller = (isset($url[0]) && $url[0] != '') ? ucwords($url[0]) . 'Controller': DEFAULT_CONTROLLER. 'Controller';
-        $controller_name = $controller;
+        $controller_name = (isset($url[0]) && $url[0] != '') ? ucwords($url[0]): DEFAULT_CONTROLLER;;
         array_shift($url);
 
         // action
         $action = (isset($url[0]) && $url[0] != '') ? $url[0]: 'index';
-        $action_name = (isset($url[0]) && $url[0] != '')? $url[0] : 'index';
+        $action_name = $action;
         array_shift($url);
 
         // params
@@ -44,4 +43,5 @@ class Router {
             echo '</noscript>';exit;
         }
     }
+
 }

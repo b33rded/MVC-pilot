@@ -19,35 +19,13 @@ class Model {
         return $this->db->get_columns($this->table);
     }
 
-    public function find($params=[]) {
-        $results = [];
-        $resultsQuery = $this->db->find($this->table, $params);
-        foreach ($resultsQuery as $result) {
-            $obj = new $this->modelName($this->table);
-            $obj->populateObjData($result);
-            $results[] = $obj;
-        }
-        return $results;
-    }
-
-    public function findFirst($params =[]) {
-        $resultQuery = $this->db->findFirst($this->table, $params);
-        $result = new self($this->table);
-        if($resultQuery) {
-            $result->populateObjData($result);
-        }
-        return $result;
-    }
-
     public function save($params) {
         $fields = $params;
         //update or insert?
         if(property_exists($this, 'id') && $this->id != '') {
-            $save = $this->update($this->id, $fields);
-            return $save;
+            return $this->update($this->id, $fields);
         } else {
-            $save = $this->insert($fields);
-            return $save;
+            return $this->insert($fields);
         }
     }
 
@@ -84,11 +62,5 @@ class Model {
             return true;
         }
         return false;
-    }
-
-    protected function populateObjData($result) {
-        foreach ($result as $key => $value) {
-            $this->$key = $value;
-        }
     }
 }

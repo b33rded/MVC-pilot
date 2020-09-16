@@ -26,14 +26,11 @@ class RegisterController extends Controller {
                 unset($data['confirm']);
                 $mail = new Mail();
                 $code = md5(time().$data['email'].rand(0,666));
-                if ($mail) {
-                    if($mail->confirmation($data['email'], $code)) {
+                if($mail->confirmation($data['email'], $code)) {
                         $newUser = new Users();
                         $newUser->register($data);
                         Router::redirect('login');
-                    }
                 }
-
             } else {
                 $this->errors = $valid->errors();
                 $this->view->displayErrors = $valid->displayErrors($this->errors);

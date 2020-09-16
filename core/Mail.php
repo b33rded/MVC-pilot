@@ -19,17 +19,15 @@ class Mail {
         $this->mail->Port       = getenv('SMTP_PORT');
     }
 
-    public function confirmation($address, $code) {
+    public function confirmation($email, $code) {
         try {
-            $this->mail->setFrom(getenv('SMTP_USER'), 'Php-blog');
-            $this->mail->addAddress($address, 'dear user');
+            $this->mail->setFrom(getenv('SMTP_USER'), 'Php-Blog');
+            $this->mail->addAddress($email, 'Dear User');
             $this->mail->addReplyTo(getenv('SMTP_USER'), 'Information');
-
             $this->mail->isHTML(true);
             $this->mail->Subject = 'Registration confirmation';
-            $this->mail->Body    = 'Hello new user!</br> To complete your registration please click on a link below:</br> http://yourwebsite.com/register/verify/?email='.$address.'&code='.$code;
+            $this->mail->Body    = 'Hello new user!</br> To complete your registration please click on a link below:</br> http://yourwebsite.com/register/verify/?email='.$email.'&code='.$code;
             $this->mail->AltBody = 'Hello new user! To complete your registration please click on a link below:';
-
             $this->mail->send();
             return true;
         } catch (Exception $e) {

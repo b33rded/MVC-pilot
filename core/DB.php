@@ -26,7 +26,7 @@ class DB {
         return self::$instance;
     }
 
-    public function query($sql, $params = [],$class = false) {
+    public function query($sql, $params = [], $class = false) {
         $this->error = false;
         if($this->query = $this->pdo->prepare($sql)) {
             $x = 1;
@@ -37,10 +37,10 @@ class DB {
                 }
             }
             if($this->query->execute()) {
-                if($class){
-                    $this->result = $this->query->fetchAll(PDO::FETCH_CLASS,$class);
+                if($class) {
+                    $this->result = $this->query->fetchAll(PDO::FETCH_CLASS, $class);
                 } else {
-                    $this->result = $this->query->fetchALL(PDO::FETCH_ASSOC);
+                    $this->result = $this->query->fetchAll(PDO::FETCH_OBJ);
                 }
                 $this->count = $this->query->rowCount();
                 $this->lastInsertID = $this->pdo->lastInsertId();
@@ -53,6 +53,23 @@ class DB {
 
     public function get() {
         return $this->result;
+    }
+
+    public function getFirst() {
+        return $this->result[0];
+    }
+
+    public function selectAll($table, $params=[], $class = false) {
+        $where = '';
+        $bind = [];
+        foreach ($params as $column=>$value) {
+            $where .= $column.'=? AND ';
+            $bind[] = $value;
+        }
+        $where = rtrim($where, ' AND ');
+        $sql = "SELECT * FROM {$table} WHERE {$where}";
+        dnd($sql);
+        return $this->query($sql, $bind, $class);
     }
 
     public function insert($table, $fields = []) {
@@ -94,21 +111,6 @@ class DB {
         $sql = "DELETE FROM {$table} WHERE id = {$id}";
         if(!$this->query($sql)->error()) {
             return true;
-        }
-        return false;
-    }
-
-
-    public function find($table, $params=[],$class=false) {
-        if($this->read($table, $params, $class)) {
-            return $this->get();
-        }
-        return false;
-    }
-
-    public function findFirst($table, $params=[], $class=false) {
-        if($this->read($table, $params, $class)) {
-            return $this->get();
         }
         return false;
     }
