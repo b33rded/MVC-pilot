@@ -55,7 +55,7 @@ class Users extends Model
 
     public function verify($email) {
         $this->userData('email', $email);
-        if ($this->status === 0 && !empty($this->activated)) {
+        if ($this->status === 0 && empty($this->activated)) {
             $t = time();
             if ($this->db->update($this->table, $this->id, ['status' => 1, 'activated' => date("Y-m-d H:i:s", $t)])) return true;
         }
