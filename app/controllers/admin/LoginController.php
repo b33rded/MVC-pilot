@@ -26,12 +26,13 @@ class LoginController extends Controller {
                 if($valid->checkAdmin()) {
                     $user = new Users($data['email']);
                     $user->login($data);
+                    Router::redirect('admin');
                 } else {
                     $this->errors = $valid->errors();
                     $this->view->displayErrors = $valid->displayErrors($this->errors);
                 }
             }
         }
-            $this->view->render('admin/login');
+            $this->view->render('admin.login');
     }
 }

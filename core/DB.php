@@ -59,7 +59,7 @@ class DB {
         return $this->result[0];
     }
 
-    public function selectAll($table, $params=[], $class = false) {
+    public function select($table, $params=[], $class = false) {
         $where = '';
         $bind = [];
         foreach ($params as $column=>$value) {
@@ -69,6 +69,11 @@ class DB {
         $where = rtrim($where, ' AND ');
         $sql = "SELECT * FROM {$table} WHERE {$where}";
         return $this->query($sql, $bind, $class);
+    }
+
+    public function selectAll($table, $order, $class = false) {
+        $sql = "SELECT * FROM {$table} ORDER BY {$order}";
+        return $this->query($sql)->get();
     }
 
     public function insert($table, $fields = []) {

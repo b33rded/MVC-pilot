@@ -8,13 +8,17 @@ class View {
     protected $outputBuffer;
     protected $layout = DEFAULT_LAYOUT;
     public $displayErrors;
+    public $users;
 
     public function __construct() {
 
     }
 
-    public function render($viewName) {
-        $viewArr = explode('/', $viewName);
+    public function render($viewName, $users = []) {
+        foreach ($users as $key => $value) {
+            $this->$key = $value;
+        }
+        $viewArr = explode('.', $viewName);
         $viewString = implode(DS, $viewArr);
         if(file_exists(ROOT . DS . 'app' . DS . 'views' . DS . $viewString . '.php')) {
             include(ROOT . DS . 'app' . DS . 'views' . DS . $viewString . '.php');

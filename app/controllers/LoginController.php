@@ -32,6 +32,6 @@ class LoginController extends Controller {
                 $this->view->displayErrors = $valid->displayErrors($this->errors);
             }
         }
-        $this->view->render('login/login');
+        $this->view->render('login.login');
     }
 }

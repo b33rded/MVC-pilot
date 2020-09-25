@@ -22,7 +22,6 @@ class Users extends Model
         parent::__construct($table);
         $this->sessionName = CURRENT_USER_SESSION_NAME;
         $this->cookieName = REMEMBER_ME_COOKIE_NAME;
-        $this->softDelete = true;
         if ($user != '') {
             if (is_int($user)) {
                 $this->userData('id', $user);
@@ -69,11 +68,15 @@ class Users extends Model
     }
 
     private function userData($column, $value) {
-        $user = $this->db->selectAll($this->table, [$column=>$value], 'App\Models\Users')->getFirst();
+        $user = $this->db->select($this->table, [$column=>$value], 'App\Models\Users')->getFirst();
         if ($user) {
             foreach ($user as $key => $val) {
                 $this->$key = $val;
             }
         }
+    }
+
+    public function findAllById($order) {
+        return $this->db->selectAll($this->table, $order);
     }
 }

@@ -36,7 +36,7 @@ class RegisterController extends Controller {
                 $this->view->displayErrors = $valid->displayErrors($this->errors);
             }
         }
-        $this->view->render('login/register');
+        $this->view->render('login.register');
     }
 
     public function verify() {
