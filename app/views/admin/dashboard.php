@@ -7,14 +7,9 @@
 <div class="wrapper">
     <div class="sidebar">
         <div class="sidebar-wrapper">
-            <div class="logo">
-                <a href="./" class="simple-text logo-normal">
-                    PHP-Blog
-                </a>
-            </div>
             <ul class="nav">
                 <li>
-                    <a href="./">
+                    <a href="<?=GROOT?>admin">
                         <i class="tim-icons icon-chart-pie-36"></i>
                         <p>Users</p>
                     </a>
@@ -33,7 +28,7 @@
                             <span class="navbar-toggler-bar bar3"></span>
                         </button>
                     </div>
-                    <a class="navbar-brand" href="">Users</a>
+                    <a class="navbar-brand" href="<?=GROOT?>admin">Admin</a>
                 </div>
                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navigation" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-bar navbar-kebab"></span>
@@ -104,23 +99,23 @@
                                     <?php endforeach; ?>
                                     </tbody>
                                 </table>
-                                <?php
-                                $currentPage = $this->pages->current();
-                                $totalPages = $this->pages->total();
-                                ?>
-                                <ul class="pagination m-auto">
-                                    <li><a class="page-link" href="<?= $this->pages->route(1) ?>">First</a></li>
-                                    <li class="paginate_button page-item <?php if($currentPage <= 1){ echo 'disabled'; } ?>">
-                                        <a class="page-link" href="<?php if($currentPage <= 1){ echo '#'; } else { echo $this->pages->route($currentPage - 1); } ?>">Prev</a>
-                                    </li>
-                                    <li class="paginate_button page-item <?php if($currentPage >= $totalPages){ echo 'disabled'; } ?>">
-                                        <a class="page-link" href="<?php if($currentPage >= $totalPages){ echo '#'; } else { echo $this->pages->route($currentPage + 1); } ?>">Next</a>
-                                    </li>
-                                    <li class="paginate_button page-item"><a class="page-link" href="<?php echo $this->pages->route($totalPages); ?>">Last</a></li>
-                                </ul>
                             </div>
                         </div>
                     </div>
+                    <?php
+                    $currentPage = $this->pages->current();
+                    $totalPages = $this->pages->total();
+                    ?>
+                    <ul class="pagination justify-content-center">
+                        <li class="page-item"><a class="page-link" href="<?= $this->pages->route(1) ?>">First</a></li>
+                        <li class="page-item <?php if($currentPage <= 1){ echo 'disabled'; }?>">
+                            <a class="page-link" href="<?php if($currentPage <= 1){ echo '#'; } else { echo $this->pages->route($currentPage - 1); } ?>">Prev</a>
+                        </li>
+                        <li class="page-item <?php if($currentPage >= $totalPages){ echo 'disabled'; } ?>">
+                            <a class="page-link" href="<?php if($currentPage >= $totalPages){ echo '#'; } else { echo $this->pages->route($currentPage + 1); } ?>">Next</a>
+                        </li>
+                        <li class="page-item"><a class="page-link" href="<?php echo $this->pages->route($totalPages); ?>">Last</a></li>
+                    </ul>
                 </div>
             </div>
         </div>

@@ -24,7 +24,8 @@ function autoload($className){
 spl_autoload_register('autoload');
 session_start();
 
-$url = isset($_SERVER['REQUEST_URI']) ? explode('/', ltrim($_SERVER['REQUEST_URI'], '/')) : [];
+$url = explode('/', trim(parse_url($_SERVER['REQUEST_URI'])['path'], '/')) ?? [];
+$params = $_SERVER['QUERY_STRING'] ?? [];
 
-Router::route($url);
+Router::route($url, $params);
 

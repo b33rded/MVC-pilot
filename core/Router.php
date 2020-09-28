@@ -2,7 +2,7 @@
 namespace Core;
 
 class Router {
-    public static function route ($url) {
+    public static function route ($url, $params) {
 
         // get rid of /blah-blah-blah/
         array_shift($url);
@@ -11,6 +11,7 @@ class Router {
         if(isset($url[0]) && is_dir('app' . DS . 'controllers' . DS . $url[0])) {
             $dir = array_shift($url);
         }
+
         $controller = (isset($url[0]) && $url[0] != '') ? ucwords($url[0]) . 'Controller': DEFAULT_CONTROLLER. 'Controller';
         $controller_name = (isset($url[0]) && $url[0] != '') ? ucwords($url[0]): DEFAULT_CONTROLLER;;
         array_shift($url);
@@ -21,6 +22,7 @@ class Router {
         array_shift($url);
 
         // params
+        array_push($url, $params);
         $queryParams = $url;
 
         if(isset($dir)) {
@@ -64,12 +66,11 @@ class Router {
         try {
             $urlArray = parse_url($_SERVER['REQUEST_URI']);
             if (!array_key_exists('path', $urlArray)) {
-                throw new \Exception("The path doesn't exist.");
+                throw new \Exception("Requested path does not exist");
             }
             return $urlArray['path'];
         } catch (\Exception $e) {
             die($e->getMessage());
         }
     }
-
 }
