@@ -79,4 +79,8 @@ class Users extends Model
     public function findAllById($order) {
         return $this->db->selectAll($this->table, $order);
     }
+
+    public function query($sql, $bind = []) {
+        return parent::query($sql, $bind);
+    }
 }

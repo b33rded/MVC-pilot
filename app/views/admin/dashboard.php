@@ -1,8 +1,8 @@
-
 <?php $this->start('head'); ?>
 <?php $this->end(); ?>
 
 <?php $this->start('body'); ?>
+
 <body class="">
 <div class="wrapper">
     <div class="sidebar">
@@ -104,6 +104,20 @@
                                     <?php endforeach; ?>
                                     </tbody>
                                 </table>
+                                <?php
+                                $currentPage = $this->pages->current();
+                                $totalPages = $this->pages->total();
+                                ?>
+                                <ul class="pagination m-auto">
+                                    <li><a class="page-link" href="<?= $this->pages->route(1) ?>">First</a></li>
+                                    <li class="paginate_button page-item <?php if($currentPage <= 1){ echo 'disabled'; } ?>">
+                                        <a class="page-link" href="<?php if($currentPage <= 1){ echo '#'; } else { echo $this->pages->route($currentPage - 1); } ?>">Prev</a>
+                                    </li>
+                                    <li class="paginate_button page-item <?php if($currentPage >= $totalPages){ echo 'disabled'; } ?>">
+                                        <a class="page-link" href="<?php if($currentPage >= $totalPages){ echo '#'; } else { echo $this->pages->route($currentPage + 1); } ?>">Next</a>
+                                    </li>
+                                    <li class="paginate_button page-item"><a class="page-link" href="<?php echo $this->pages->route($totalPages); ?>">Last</a></li>
+                                </ul>
                             </div>
                         </div>
                     </div>

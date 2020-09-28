@@ -52,4 +52,24 @@ class Router {
         }
     }
 
+    public static function queryStringExists () {
+        return !empty(self::getQueryString());
+    }
+
+    public static function getQueryString() {
+        return $_SERVER['QUERY_STRING'];
+    }
+
+    public static function getRequestPath() {
+        try {
+            $urlArray = parse_url($_SERVER['REQUEST_URI']);
+            if (!array_key_exists('path', $urlArray)) {
+                throw new \Exception("The path doesn't exist.");
+            }
+            return $urlArray['path'];
+        } catch (\Exception $e) {
+            die($e->getMessage());
+        }
+    }
+
 }
