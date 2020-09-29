@@ -17,7 +17,7 @@ class Validation {
         $email = $post['email'];
         $password = $post['password'];
         $confirm = $post['confirm'];
-        $user_get = $this->db->selectAll($this->table, ['email'=>$email]);
+        $user_get = $this->db->select($this->table, ['email'=>$email]);
 
         if (empty($email)) {
             $this->errors['email'] = 'An email is required';
@@ -43,7 +43,7 @@ class Validation {
     public function checkLogin($post) {
         $email = $post['email'];
         $password = $post['password'];
-        $user = $this->db->selectAll($this->table, ['email'=>$email])->getFirst();;
+        $user = $this->db->select($this->table, ['email'=>$email])->getFirst();;
         $this->user = $user;
         if (empty($email)) {
             $this->errors['email'] = 'An email is required';
