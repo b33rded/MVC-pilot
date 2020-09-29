@@ -4,7 +4,7 @@ use App\Models\Users;
 <nav class="navbar navbar-expand-lg fixed-top navbar-transparent " color-on-scroll="100">
     <div class="container">
         <div class="navbar-translate">
-            <a class="navbar-brand" style="font-size: 30px" href="">
+            <a class="navbar-brand" style="font-size: 30px" href="<?=GROOT?>">
                 <span>MVC•</span>Pilot
             </a>
             <button class="navbar-toggler navbar-toggler" type="button" data-toggle="collapse" data-target="#navigation" aria-controls="navigation-index" aria-expanded="false" aria-label="Toggle navigation">
